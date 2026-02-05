@@ -1,0 +1,28 @@
+services:
+  # Frontend Service
+  - type: web
+    name: exam-monitoring-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    publishDir: frontend/dist
+    staticPublishPath: ./
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://your-backend-url.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    
+  # Backend Service (if deploying separately)
+  - type: web
+    name: exam-monitoring-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # Add other environment variables here

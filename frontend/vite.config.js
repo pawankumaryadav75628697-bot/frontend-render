@@ -5,6 +5,19 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   root: './',
   plugins: [react()],
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom']
+        }
+      }
+    }
+  },
   define: {
     // Make sure to stringify the values
     __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production')
