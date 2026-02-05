@@ -95,16 +95,56 @@ if (process.env.NODE_ENV === 'production' && !process.env.DISABLE_RATE_LIMIT) {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS
+// Enable CORS with more permissive settings
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://backend-ol1a.onrender.com', 'https://www.pkthenexgenexam.xyz', 'https://pkthenexgenexam.xyz']
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176', 'http://127.0.0.1:5173', 'http://127.0.0.1:5174', 'http://127.0.0.1:5175', 'http://127.0.0.1:5176'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allowed origins in production
+    const allowedOrigins = [
+      'https://backend-ol1a.onrender.com',
+      'https://www.pkthenexgenexam.xyz', 
+      'https://pkthenexgenexam.xyz'
+    ];
+    
+    // Allowed origins in development
+    const devOrigins = [
+      'http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 
+      'http://localhost:5175', 'http://localhost:5176', 'http://127.0.0.1:5173', 
+      'http://127.0.0.1:5174', 'http://127.0.0.1:5175', 'http://127.0.0.1:5176'
+    ];
+    
+    if (process.env.NODE_ENV === 'production') {
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    } else {
+      if (devOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Handle preflight requests explicitly
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).send();
+});
 
 // Development middleware - disable rate limiting and add extensive logging
 if (process.env.NODE_ENV !== 'production') {
