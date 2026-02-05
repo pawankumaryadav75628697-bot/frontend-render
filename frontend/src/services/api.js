@@ -1,7 +1,7 @@
 import axios from 'axios';
 import mockApi from './apiMock.js';
 
-// Use mock API for now since backend isn't deployed
+// Force mock API for now since backend isn't deployed
 const USE_MOCK_API = true;
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
@@ -15,7 +15,19 @@ const realApi = axios.create({
   },
 });
 
-const api = USE_MOCK_API ? mockApi : realApi;
+// Add missing methods to mock API to prevent errors
+const enhancedMockApi = {
+  ...mockApi,
+  // Add missing methods that might be called
+  defaults: () => {},
+  getUri: (config) => config.url,
+  request: (config) => Promise.resolve({ data: {} }),
+  delete: (url) => Promise.resolve({ data: { success: true } }),
+  put: (url, data) => Promise.resolve({ data: { success: true, data } }),
+  patch: (url, data) => Promise.resolve({ data: { success: true, data } }),
+};
+
+const api = USE_MOCK_API ? enhancedMockApi : realApi;
 
 // Add token to requests (only for real API)
 if (!USE_MOCK_API) {
