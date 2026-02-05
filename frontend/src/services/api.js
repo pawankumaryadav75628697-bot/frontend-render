@@ -1,15 +1,21 @@
 import axios from 'axios';
+import mockApi from './apiMock.js';
 
-const API_BASE_URL = import.meta.env.PROD 
+// Use mock API for now since backend isn't deployed
+const USE_MOCK_API = true;
+
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://your-backend-service-name.onrender.com/api/v1'  // Replace with actual backend URL
   : '/api/v1';
 
-const api = axios.create({
+const realApi = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+const api = USE_MOCK_API ? mockApi : realApi;
 
 // Add token to requests
 api.interceptors.request.use(
