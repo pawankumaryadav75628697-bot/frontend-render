@@ -38,5 +38,6 @@ api.interceptors.response.use(
 );
 
 console.log('🔥 USING REAL BACKEND API WITH DATABASE:', API_BASE_URL);
+console.log('🚀 FRONTEND DEPLOYED:', new Date().toISOString());
 
 export default api;
