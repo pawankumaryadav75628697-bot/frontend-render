@@ -1,0 +1,157 @@
+.student-login-guide {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.guide-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.guide-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.guide-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.guide-header p {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.guide-steps {
+  padding: 30px 20px;
+}
+
+.step {
+  display: flex;
+  margin-bottom: 30px;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.step-number {
+  background: #667eea;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.step-content h3 {
+  margin: 0 0 10px 0;
+  color: #2d3748;
+  font-size: 1.3rem;
+}
+
+.step-content p {
+  color: #4a5568;
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+}
+
+.step-content ul,
+.step-content ol {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.step-content li {
+  margin-bottom: 5px;
+}
+
+.guide-tips {
+  background: #f7fafc;
+  padding: 30px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.guide-tips h3 {
+  margin: 0 0 20px 0;
+  color: #2d3748;
+  text-align: center;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.tip {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  color: #4a5568;
+  line-height: 1.5;
+}
+
+.guide-footer {
+  background: #edf2f7;
+  padding: 30px 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.help-section h4 {
+  margin: 0 0 15px 0;
+  color: #2d3748;
+  font-size: 1.2rem;
+}
+
+.help-section p {
+  color: #4a5568;
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+}
+
+.help-section ol {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.help-section li {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 768px) {
+  .student-login-guide {
+    padding: 10px;
+  }
+  
+  .step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .guide-header h2 {
+    font-size: 1.5rem;
+  }
+}

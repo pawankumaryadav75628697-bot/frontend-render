@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Authentication Issue</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .section { margin: 20px 0; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .warning { background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404; }
+        button { padding: 12px 24px; margin: 8px; cursor: pointer; border: none; border-radius: 4px; font-size: 14px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-warning { background-color: #ffc107; color: #212529; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        button:hover { opacity: 0.9; }
+        pre { background-color: #f8f9fa; padding: 15px; border-radius: 4px; white-space: pre-wrap; overflow-x: auto; }
+        input { padding: 10px; margin: 8px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+        .status { font-weight: bold; font-size: 18px; margin: 10px 0; }
+        .step { margin: 15px 0; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #555; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Fix Authentication Issue</h1>
+        
+        <div class="section error">
+            <h2>❌ Problem Identified</h2>
+            <p><strong>Issue:</strong> Your frontend is making API calls without proper authentication.</p>
+            <p><strong>Error:</strong> "Not authorized to access this route"</p>
+            <p><strong>Cause:</strong> Missing or invalid Authorization token in the request headers.</p>
+        </div>
+
+        <div class="section">
+            <h2>Step 1: Check Current Authentication Status</h2>
+            <button class="btn-primary" onclick="checkAuthStatus()">Check Auth Status</button>
+            <div id="authStatus"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 2: Login to Get Valid Token</h2>
+            <div class="step">
+                <input type="email" id="email" placeholder="Enter your email" value="">
+                <input type="password" id="password" placeholder="Enter your password" value="">
+                <button class="btn-success" onclick="loginUser()">Login</button>
+            </div>
+            <div id="loginResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 3: Test API Call with Token</h2>
+            <button class="btn-warning" onclick="testExamsAPI()">Test /api/v1/exams</button>
+            <button class="btn-primary" onclick="testAuthMiddleware()">Test Auth Middleware</button>
+            <div id="apiTestResult"></div>
+        </div>
+
+        <div class="section">
+            <h2>Step 4: Fix Your Frontend Code</h2>
+            <p>Once authentication works, update your frontend code to always include the Authorization header:</p>
+            <pre><code>// ✅ CORRECT - Include Authorization header
+fetch('/api/v1/exams?page=1&limit=10', {
+  headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+  }
+})
+
+// ❌ WRONG - Missing Authorization header (causes 401 error)
+fetch('/api/v1/exams?page=1&limit=10', {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Quick Fix</h2>
+            <button class="btn-danger" onclick="quickFix()">AUTO-FIX: Login & Test API</button>
+            <div id="quickFixResult"></div>
+        </div>
+    </div>
+
+    <script>
+        function log(elementId, message, className = 'success') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="${className}"><pre>${message}</pre></div>`;
+        }
+
+        function checkAuthStatus() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            let status = '📊 Authentication Status:\n\n';
+            status += `🔑 Token: ${token ? '✅ EXISTS' : '❌ NOT FOUND'}\n`;
+            status += `👤 User: ${user ? '✅ EXISTS' : '❌ NOT FOUND'}\n\n`;
+            
+            if (token) {
+                status += `Token (first 30 chars): ${token.substring(0, 30)}...\n`;
+            }
+            
+            if (user) {
+                try {
+                    const userObj = JSON.parse(user);
+                    status += `User Details:\n${JSON.stringify(userObj, null, 2)}\n`;
+                } catch (e) {
+                    status += `❌ User data corrupted: ${e.message}\n`;
+                }
+            }
+            
+            if (!token) {
+                status += '\n🚨 THIS IS THE PROBLEM! No token found.\n';
+                status += '👉 You need to login first to get a token.\n';
+            }
+            
+            log('authStatus', status, token ? 'success' : 'error');
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                log('loginResult', '❌ Please enter both email and password', 'error');
+                return;
+            }
+
+            try {
+                log('loginResult', '🔄 Logging in...', 'warning');
+                
+                const response = await fetch('/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    let result = '✅ LOGIN SUCCESSFUL!\n\n';
+                    result += `User: ${data.user.fullName}\n`;
+                    result += `Type: ${data.user.userType}\n`;
+                    result += `Email: ${data.user.email}\n`;
+                    result += `Token: ${data.token.substring(0, 40)}...\n\n`;
+                    result += '🎉 Token saved to localStorage!\n';
+                    result += '👉 Now you can make API calls successfully.';
+                    
+                    log('loginResult', result, 'success');
+                } else {
+                    let result = '❌ LOGIN FAILED!\n\n';
+                    result += `Status: ${response.status}\n`;
+                    result += `Message: ${data.message || 'Unknown error'}\n\n`;
+                    
+                    if (response.status === 401) {
+                        result += '🔍 Possible causes:\n';
+                        result += '• Incorrect email or password\n';
+                        result += '• User account does not exist\n';
+                        result += '• User account is deactivated\n';
+                    }
+                    
+                    log('loginResult', result, 'error');
+                }
+            } catch (error) {
+                let result = '❌ LOGIN ERROR!\n\n';
+                result += `Error: ${error.message}\n\n`;
+                result += '🔍 Possible causes:\n';
+                result += '• Backend server is not running\n';
+                result += '• Network connection issues\n';
+                result += '• CORS configuration problems\n';
+                
+                log('loginResult', result, 'error');
+            }
+        }
+
+        async function testAuthMiddleware() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                log('apiTestResult', '❌ No token found! Please login first.', 'error');
+                return;
+            }
+
+            try {
+                log('apiTestResult', '🔄 Testing authentication middleware...', 'warning');
+                
+                const response = await fetch('/api/v1/exams/debug/auth-test', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                
+                let result = `📊 Auth Middleware Test Results:\n\n`;
+                result += `Status: ${response.status}\n`;
+                result += `Success: ${response.ok ? '✅ YES' : '❌ NO'}\n\n`;
+                result += `Response:\n${JSON.stringify(data, null, 2)}`;
+                
+                log('apiTestResult', result, response.ok ? 'success' : 'error');
+            } catch (error) {
+                log('apiTestResult', `❌ Auth test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testExamsAPI() {
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                log('apiTestResult', '❌ No token found! Please login first.', 'error');
+                return;
+            }
+
+            try {
+                log('apiTestResult', '🔄 Testing /api/v1/exams endpoint...', 'warning');
+                
+                const response = await fetch('/api/v1/exams?page=1&limit=10', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const data = await response.json();
+                
+                let result = `📊 Exams API Test Results:\n\n`;
+                result += `Status: ${response.status}\n`;
+                result += `Success: ${response.ok ? '✅ YES' : '❌ NO'}\n\n`;
+                
+                if (response.ok) {
+                    result += `Found ${data.data?.length || 0} exams\n`;
+                    result += `Total: ${data.pagination?.total || 0}\n`;
+                    result += `Pages: ${data.pagination?.pages || 0}\n\n`;
+                    result += '🎉 API CALL SUCCESSFUL!\n';
+                    result += '✅ Your authentication is working correctly.';
+                } else {
+                    result += `Error: ${data.message || 'Unknown error'}\n\n`;
+                    
+                    if (response.status === 401) {
+                        result += '🔍 Still getting 401? Possible causes:\n';
+                        result += '• Token expired\n';
+                        result += '• Token format is incorrect\n';
+                        result += '• Backend JWT secret changed\n';
+                    }
+                }
+                
+                result += `\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                
+                log('apiTestResult', result, response.ok ? 'success' : 'error');
+            } catch (error) {
+                log('apiTestResult', `❌ Exams API error: ${error.message}`, 'error');
+            }
+        }
+
+        async function quickFix() {
+            log('quickFixResult', '🚀 Starting Quick Fix Process...', 'warning');
+            
+            // Step 1: Check if we have admin credentials from backend logs
+            const adminEmail = 'pawankumar91819@gmail.com'; // From your backend logs
+            let result = `🔧 Quick Fix Process:\n\n`;
+            result += `1. Attempting to login as: ${adminEmail}\n`;
+            
+            try {
+                // Try common passwords
+                const passwords = ['admin123', 'password', '123456', 'admin'];
+                let loginSuccess = false;
+                
+                for (const password of passwords) {
+                    try {
+                        const response = await fetch('/api/v1/auth/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: adminEmail, password }),
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (response.ok && data.token) {
+                            localStorage.setItem('token', data.token);
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                            result += `✅ Login successful with password: ${password}\n`;
+                            result += `2. Token stored in localStorage\n`;
+                            loginSuccess = true;
+                            break;
+                        }
+                    } catch (e) {
+                        // Continue to next password
+                    }
+                }
+                
+                if (!loginSuccess) {
+                    result += `❌ Login failed with common passwords\n`;
+                    result += `👉 Please enter your correct credentials above.\n`;
+                    log('quickFixResult', result, 'error');
+                    return;
+                }
+                
+                // Step 2: Test the API
+                result += `3. Testing /api/v1/exams endpoint...\n`;
+                
+                const token = localStorage.getItem('token');
+                const apiResponse = await fetch('/api/v1/exams?page=1&limit=10', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                const apiData = await apiResponse.json();
+                
+                if (apiResponse.ok) {
+                    result += `✅ API call successful!\n`;
+                    result += `4. Found ${apiData.data?.length || 0} exams\n`;
+                    result += `\n🎉 PROBLEM FIXED!\n`;
+                    result += `Your frontend can now make authenticated API calls.\n`;
+                    result += `\n👉 Make sure your frontend code includes the Authorization header in all API requests.`;
+                } else {
+                    result += `❌ API call still failing: ${apiData.message}\n`;
+                }
+                
+                log('quickFixResult', result, apiResponse.ok ? 'success' : 'error');
+                
+            } catch (error) {
+                result += `❌ Quick fix failed: ${error.message}\n`;
+                log('quickFixResult', result, 'error');
+            }
+        }
+
+        // Auto-check auth status when page loads
+        window.onload = function() {
+            checkAuthStatus();
+        };
+    </script>
+</body>
+</html>

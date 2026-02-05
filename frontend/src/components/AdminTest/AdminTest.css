@@ -1,0 +1,133 @@
+.admin-test-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+
+.admin-test-container h1 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+
+.admin-test-container h2 {
+  color: #4a5568;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.test-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.test-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.test-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.test-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.test-button.primary {
+  background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+  color: white;
+}
+
+.test-button.success {
+  background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+  color: white;
+}
+
+.result-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.result-pre {
+  background: #f7fafc;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 2px solid #e2e8f0;
+  white-space: pre-wrap;
+  min-height: 100px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.instructions-container,
+.troubleshooting-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.instructions-container ol {
+  padding-left: 1.2rem;
+}
+
+.instructions-container li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.troubleshooting-container ul {
+  padding-left: 1.2rem;
+}
+
+.troubleshooting-container li {
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
+}
+
+.troubleshooting-container code {
+  background: #edf2f7;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #e53e3e;
+  font-weight: 600;
+}
+
+.troubleshooting-container p {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+@media (max-width: 768px) {
+  .admin-test-container {
+    padding: 1rem;
+  }
+  
+  .test-actions {
+    flex-direction: column;
+  }
+  
+  .test-button {
+    width: 100%;
+  }
+}

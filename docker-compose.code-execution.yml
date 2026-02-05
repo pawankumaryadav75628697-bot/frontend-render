@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # Python execution environment
+  python-executor:
+    image: python:3.11-alpine
+    container_name: exam_python_executor
+    command: tail -f /dev/null
+    working_dir: /workspace
+    volumes:
+      - ./code-execution-temp:/workspace
+    networks:
+      - code-execution-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    ulimits:
+      nproc: 50
+      fsize: 10485760  # 10MB file size limit
+    memory: 128m
+    cpus: '0.5'
+    restart: "no"
+
+  # Java execution environment
+  java-executor:
+    image: openjdk:11-jre-slim
+    container_name: exam_java_executor
+    command: tail -f /dev/null
+    working_dir: /workspace
+    volumes:
+      - ./code-execution-temp:/workspace
+    networks:
+      - code-execution-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    ulimits:
+      nproc: 50
+      fsize: 10485760
+    memory: 256m
+    cpus: '0.5'
+    restart: "no"
+
+  # C/C++ execution environment
+  cpp-executor:
+    image: gcc:11-alpine
+    container_name: exam_cpp_executor
+    command: tail -f /dev/null
+    working_dir: /workspace
+    volumes:
+      - ./code-execution-temp:/workspace
+    networks:
+      - code-execution-network
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - SETUID
+      - SETGID
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    ulimits:
+      nproc: 50
+      fsize: 10485760
+    memory: 256m
+    cpus: '0.5'
+    restart: "no"
+
+networks:
+  code-execution-network:
+    driver: bridge
+    internal: true  # No internet access for security
+
+volumes:
+  code-execution-temp:
+    driver: local
