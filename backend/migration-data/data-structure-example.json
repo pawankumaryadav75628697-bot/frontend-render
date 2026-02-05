@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "example": "Copy your existing users data here",
+      "format": "Same as your User model schema"
+    }
+  ],
+  "students": [
+    {
+      "example": "Copy your existing students data here",
+      "format": "Same as your Student model schema"
+    }
+  ],
+  "exams": [
+    {
+      "example": "Copy your existing exams data here",
+      "format": "Same as your Exam model schema"
+    }
+  ]
+}

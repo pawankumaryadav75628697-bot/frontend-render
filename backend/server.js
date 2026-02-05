@@ -109,6 +109,12 @@ app.use(cors({
     ];
     
     // Allowed origins in development
+    const devOrigins = [
+      'http://localhost:3000', 'http://localhost:5173', 'http://localhost:5174', 
+      'http://localhost:5175', 'http://localhost:5176', 'http://127.0.0.1:5173', 
+      'http://127.0.0.1:5174', 'http://127.0.0.1:5175', 'http://127.0.0.1:5176'
+    ];
+    
     if (process.env.NODE_ENV === 'production') {
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -117,8 +123,12 @@ app.use(cors({
         callback(new Error('Not allowed by CORS'));
       }
     } else {
-      // In development, allow all origins for testing
-      callback(null, true);
+      if (devOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,
@@ -240,11 +250,8 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5001;
 
-// Force production mode for Render deployment
-const NODE_ENV = process.env.NODE_ENV || (process.env.PORT ? 'production' : 'development');
-
 app.listen(PORT, () => {
-  console.log(`Server running in ${NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
 
 // Handle unhandled promise rejections

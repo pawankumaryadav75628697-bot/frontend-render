@@ -1,4 +1,4 @@
-// REAL API - Use deployed backend with real database
+// REAL API - Use deployed backend for real data
 import axios from 'axios';
 
 const API_BASE_URL = 'https://frontend-render-lbix.onrender.com/api/v1';
@@ -37,7 +37,6 @@ api.interceptors.response.use(
   }
 );
 
-console.log('🔥 USING REAL BACKEND API WITH DATABASE:', API_BASE_URL);
-console.log('🚀 FRONTEND DEPLOYED:', new Date().toISOString());
+console.log('🔥 USING REAL BACKEND API:', API_BASE_URL);
 
 export default api;
