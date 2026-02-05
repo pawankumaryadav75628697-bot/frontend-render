@@ -18,6 +18,10 @@ export default defineConfig({
       }
     }
   },
+  preview: {
+    host: '0.0.0.0',
+    port: 4173
+  },
   define: {
     // Make sure to stringify the values
     __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production')
