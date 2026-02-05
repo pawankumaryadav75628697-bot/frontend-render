@@ -43,6 +43,16 @@ const mockApi = {
       return { data: response };
     }
     return { data: { success: false, message: 'Mock API: Endpoint not implemented' } };
+  },
+  
+  // Add missing axios methods to prevent undefined errors
+  interceptors: {
+    request: {
+      use: () => {},
+    },
+    response: {
+      use: () => {}
+    }
   }
 };
 
