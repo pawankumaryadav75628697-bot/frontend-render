@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BackendTest from '../../../components/BackendTest/BackendTest';
 import './AdminDashboard.css';
 
 const EnhancedAdminDashboard = () => {
@@ -692,6 +693,9 @@ const EnhancedAdminDashboard = () => {
                 <span>System Settings</span>
               </Link>
             </div>
+            
+            {/* Backend Connection Test */}
+            <BackendTest />
           </div>
         </div>
       </div>
