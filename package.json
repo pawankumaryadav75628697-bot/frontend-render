@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "cd frontend && npm install",
     "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm run preview"
+    "start": "cd frontend && npm run build && npm run preview"
   },
   "engines": {
     "node": ">=18.0.0",
