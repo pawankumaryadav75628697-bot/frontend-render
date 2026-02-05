@@ -2,8 +2,13 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-// Serve static files from the dist directory
+// Serve static files from dist directory
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// Serve favicon specifically
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end(); // No content response
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
