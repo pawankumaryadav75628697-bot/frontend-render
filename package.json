@@ -3,18 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "install:frontend": "cd frontend && npm install",
-    "build:frontend": "cd frontend && npm run build",
-    "start:frontend": "cd frontend && npm run preview",
-    "install:backend": "cd backend && npm install",
-    "start:backend": "cd backend && npm start",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && npm run dev",
-    "build": "npm run build:frontend"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "postinstall": "cd frontend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run preview"
   },
   "engines": {
     "node": ">=18.0.0",
