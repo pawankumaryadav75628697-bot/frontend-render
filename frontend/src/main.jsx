@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+// Import fetch override to intercept all API calls
+import './services/fetchOverride.js'
+
 // Reduce console noise in development
 if (import.meta.env.DEV) {
   // Only show essential logs in development
