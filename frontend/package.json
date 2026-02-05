@@ -7,8 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "node health.js",
-    "preview:vite": "vite preview --host 0.0.0.0 --port 4173"
+    "start": "node server.js",
+    "preview": "node server.js"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
