@@ -3,6 +3,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import BackendTest from '../../../components/BackendTest/BackendTest';
+import DatabaseDebug from '../../../components/DatabaseDebug/DatabaseDebug';
 import './AdminDashboard.css';
 
 const EnhancedAdminDashboard = () => {
@@ -696,6 +697,9 @@ const EnhancedAdminDashboard = () => {
             
             {/* Backend Connection Test */}
             <BackendTest />
+            
+            {/* Database Connection Debug */}
+            <DatabaseDebug />
           </div>
         </div>
       </div>
